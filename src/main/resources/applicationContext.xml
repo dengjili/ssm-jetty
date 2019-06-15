@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="
+    http://www.springframework.org/schema/beans http://www.springframework.org/schema/beans/spring-beans.xsd
+    http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context.xsd">
+
+	<bean id="server" class="org.eclipse.jetty.server.Server" init-method="start" destroy-method="stop">
+		<constructor-arg>
+			<bean id="threadPool"
+				class="org.eclipse.jetty.util.thread.QueuedThreadPool">
+				<property name="minThreads" value="10" />
+				<property name="maxThreads" value="50" />
+			</bean>
+		</constructor-arg>
+		<property name="connectors">
+			<list>
+				<bean class="org.eclipse.jetty.server.nio.NetworkTrafficSelectChannelConnector">
+					<constructor-arg ref="server" />
+					<property name="port" value="8080" />
+				</bean>
+			</list>
+		</property>
+
+		<property name="handler">
+			<bean id="handlers"
+				class="org.eclipse.jetty.server.handler.HandlerList">
+				<property name="handlers">
+					<list>
+						<bean
+							class="org.eclipse.jetty.server.handler.ContextHandlerCollection">
+							<property name="handlers">
+								<list>
+									<bean class="org.eclipse.jetty.webapp.WebAppContext">
+										<property name="throwUnavailableOnStartupException"
+											value="true" />
+										<property name="contextPath" value="C:/TempData/ericsson-workspace/ssm-jetty/target/ssm-jetty" />
+										<property name="configurationDiscovered" value="true" />
+										<property name="defaultsDescriptor" value="C:/TempData/ericsson-workspace/ssm-jetty/target/ssm-jetty/WEB-INF/web.xml" />
+										<property name="resourceBase" value="C:/TempData/ericsson-workspace/ssm-jetty/target/ssm-jetty/WEB-INF/classes" />
+									</bean>
+								</list>
+							</property>
+						</bean>
+						<bean class="org.eclipse.jetty.server.handler.DefaultHandler" />
+					</list>
+				</property>
+			</bean>
+		</property>
+	</bean>
+ 
+<!--  	<bean id="a" class="priv.dengjl.test.A">
+ 		<property name="test">
+ 			<list>
+ 				<bean id="b2" class="priv.dengjl.test.B">
+			 		<constructor-arg ref="a"/>
+			 		<property name="name" value="wangsi"></property>
+			 	</bean>
+ 			</list>
+ 		</property>
+ 	</bean>
+ 	<bean id="b" class="priv.dengjl.test.B">
+ 		<constructor-arg ref="a"/>
+ 		<property name="name" value="zhangsan"></property>
+ 	</bean> -->
+</beans>
